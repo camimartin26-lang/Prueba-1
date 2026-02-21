@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Base Agentes (Local)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brand">Base de conocimiento ventas</div>
+      <nav class="nav">
+        <a href="#cards">Información util</a>
+        <a href="#calc">Calculadora costo total</a>
+        <a href="#phones">Teléfonos y datos de interés </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="hero">
+      <h1>Web local (HTML + CSS + JS)</h1>
+      <p>One page · Cards con “Ver más” (popup con acordeón) · Quiz de costos con resultado.</p>
+    </section>
+
+    <!-- SECCIÓN 1 -->
+    <section id="cards" class="section">
+      <div class="section-head">
+        <h2>Sección 1 · Accesos</h2>
+        <p>Tocá “Ver más” para abrir la info en un popup con acordeón.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Planes</h3>
+          <p>Resumen de planes, beneficios y cuándo ofrecer cada uno.</p>
+          <button class="btn" data-open-info="planes">Ver más</button>
+        </article>
+
+        <article class="card">
+          <h3>Productos adicionales</h3>
+          <p>GO Box, fútbol uruguayo, packs, combos y upsell.</p>
+          <button class="btn" data-open-info="adicionales">Ver más</button>
+        </article>
+
+        <article class="card">
+          <h3>Proceso de venta</h3>
+          <p>Checklist por pasos: diagnóstico → propuesta → objeciones → cierre.</p>
+          <button class="btn" data-open-info="proceso">Ver más</button>
+        </article>
+
+        <article class="card">
+          <h3>Gestión datos del cliente</h3>
+          <p>Datos mínimos, orden de carga y seguimiento del lead.</p>
+          <button class="btn" data-open-info="datos">Ver más</button>
+        </article>
+
+        <article class="card">
+          <h3>Venta</h3>
+          <p>Guiones listos, mensajes cortos y respuestas a objeciones.</p>
+          <button class="btn" data-open-info="venta">Ver más</button>
+        </article>
+
+        <article class="card">
+          <h3>SDS</h3>
+          <p>Soporte, procedimientos, fallas comunes y escalamiento.</p>
+          <button class="btn" data-open-info="sds">Ver más</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2 -->
+    <section id="calc" class="section">
+      <div class="section-head">
+        <h2>Sección 2 · Calculadora de costos</h2>
+        <p>Quiz en 3 pasos. Al finalizar, muestra conexión + mensual en popup.</p>
+      </div>
+
+      <div class="panel">
+        <div class="calc-top">
+          <div class="calc-title">Quiz de costos</div>
+          <div class="calc-step"><span id="stepLabel">Paso 1</span> / 3</div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar" id="progressBar" style="width:33.333%"></div>
+        </div>
+
+        <!-- Paso 1 -->
+        <div class="step" id="step1">
+          <h3>Pregunta 1 · ¿Tipo de cliente?</h3>
+
+          <label class="option">
+            <input type="radio" name="tipoCliente" value="p1">
+            <span>P1 — Conexión $1.000 — Base $1.200</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipoCliente" value="p2">
+            <span>P2 — Conexión $800 — Base $1.350</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipoCliente" value="p3">
+            <span>P3 — Conexión $1.200 — Base $1.600</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="tipoCliente" value="tarjeta">
+            <span>Tarjeta — Conexión $900 — Base $1.450</span>
+          </label>
+
+          <div class="err" id="err1" hidden>Elegí una opción para continuar.</div>
+
+          <div class="actions">
+            <button class="btn primary" id="next1">Siguiente</button>
+          </div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="step" id="step2" hidden>
+          <h3>Pregunta 2 · ¿Cantidad de decodificadores?</h3>
+
+          <div class="row">
+            <label class="chip">
+              <input type="radio" name="decos" value="1"><span>1</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="decos" value="2"><span>2</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="decos" value="3"><span>3</span>
+            </label>
+          </div>
+
+          <div class="err" id="err2" hidden>Elegí la cantidad de decodificadores.</div>
+
+          <div class="actions">
+            <button class="btn" id="back2">Atrás</button>
+            <button class="btn primary" id="next2">Siguiente</button>
+          </div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="step" id="step3" hidden>
+          <h3>Pregunta 3 · ¿Adicionales?</h3>
+
+          <label class="option">
+            <input type="checkbox" id="gobox">
+            <span>GO Box (+ $300 mensual)</span>
+          </label>
+          <label class="option">
+            <input type="checkbox" id="futbol">
+            <span>Fútbol uruguayo (+ $450 mensual)</span>
+          </label>
+
+          <div class="actions">
+            <button class="btn" id="back3">Atrás</button>
+            <button class="btn success" id="finish">Finalizar</button>
+          </div>
+
+          <p class="hint">Precios de ejemplo: editá el objeto <b>PRICES</b> en <code>app.js</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3 -->
+    <section id="phones" class="section">
+      <div class="section-head">
+        <h2>Sección 3 · Teléfonos de interés</h2>
+        <p>Links tel: para tocar y llamar desde el celular.</p>
+      </div>
+
+      <div class="two">
+        <div class="panel">
+          <div class="list">
+            <div class="item">
+              <div>
+                <div class="item-title">Soporte técnico</div>
+                <div class="item-sub">Fallas / instalaciones / consultas</div>
+              </div>
+              <a class="btn" href="tel:+598000000">Llamar</a>
+            </div>
+
+            <div class="item">
+              <div>
+                <div class="item-title">Ventas / Altas</div>
+                <div class="item-sub">Planes / activaciones</div>
+              </div>
+              <a class="btn" href="tel:+598000001">Llamar</a>
+            </div>
+
+            <div class="item">
+              <div>
+                <div class="item-title">Cobranzas</div>
+                <div class="item-sub">Pagos / facturación</div>
+              </div>
+              <a class="btn" href="tel:+598000002">Llamar</a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel info">
+          <h3>Cajita de información</h3>
+          <p><b>Ejemplo:</b> Promo vigente + recordatorio de cierre.</p>
+          <div class="note">
+            Antes de cerrar: confirmar <b>dirección</b>, <b>horario</b> y <b>cantidad de TV/decos</b>.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Local · Sin backend · Editá textos en <code>app.js</code></span>
+    </footer>
+
+  </main>
+
+  <!-- MODAL GENÉRICO -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="modalTitle">Título</div>
+          <div class="modal-desc" id="modalDesc">Descripción</div>
+        </div>
+        <button class="icon-btn" data-close aria-label="Cerrar">✕</button>
+      </div>
+
+      <div class="modal-body" id="modalBody"></div>
+
+      <div class="modal-foot">
+        <button class="btn" data-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
