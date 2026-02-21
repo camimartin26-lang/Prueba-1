@@ -3,30 +3,53 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Base de conocimiento</title>
+  <title>Base Agentes · DIRECTV</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <header class="topbar">
-    <div class="wrap">
-      <div class="brand">Base de conocimiento </div>
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <span class="brand-badge" aria-hidden="true"></span>
+        <div class="brand-text">
+          <div class="brand-title">Base Agentes</div>
+          <div class="brand-sub">Estilo DIRECTV · uso interno</div>
+        </div>
+      </div>
+
       <nav class="nav" aria-label="Navegación principal">
-        <a href="#cards">Info</a>
+        <a href="#cards">Accesos</a>
         <a href="#calc">Calculadora</a>
-        <a href="#phones">Datos contacto</a>
+        <a href="#phones">Teléfonos</a>
       </nav>
     </div>
   </header>
 
   <main class="wrap">
     <section class="hero">
-      <h1>Base de conocimiento - Agentes de ventas</h1>
-      <p>Toda la información rápida sobre el proceso de ventas de Directv</p>
+      <div class="hero-left">
+        <h1>Panel rápido para ventas</h1>
+        <p>Accesos + calculadora por pasos + teléfonos útiles. Todo offline (local).</p>
 
-      <div class="hero-cta">
-        <a class="btn primary" href="#calc">Calcular precio venta</a>
-        <a class="btn" href="#cards">Información </a>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#calc">Calcular costos</a>
+          <a class="btn" href="#cards">Ver accesos</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-card">
+          <div class="hero-kpi">
+            <div class="kpi-title">Tip rápido</div>
+            <div class="kpi-text">Confirmá <b>tipo de cliente</b> + <b>decos</b> antes de cotizar.</div>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-kpi">
+            <div class="kpi-title">Atajo</div>
+            <div class="kpi-text">Usá “Ver más” para guiones copiables y detalles.</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -34,77 +57,62 @@
     <section id="cards" class="section">
       <div class="section-head">
         <h2>Accesos</h2>
-        <p>Tocá “Ver más” para abrir la información en popup (acordeón).</p>
+        <p>Tocá “Ver más” para abrir la info en popup (acordeón).</p>
       </div>
 
       <div class="grid">
         <article class="card">
-          <div class="card-top">
+          <div class="card-head">
             <h3>Planes</h3>
-            <span class="tag tag-a">Guía</span>
+            <span class="pill pill-blue">Guía</span>
           </div>
-          <p>Planes, recomendaciones y tips de oferta.</p>
-          <button class="btn primary" data-open-info="planes">Ver más</button>
+          <p>Precios base, notas y beneficios.</p>
+          <button class="btn btn-primary" data-open-info="planes">Ver más</button>
         </article>
 
         <article class="card">
-          <div class="card-top">
+          <div class="card-head">
             <h3>Productos adicionales</h3>
-            <span class="tag tag-b">Upsell</span>
+            <span class="pill pill-cyan">Upsell</span>
           </div>
-          <p>GO Box, fútbol uruguayo y extras.</p>
-          <button class="btn primary" data-open-info="adicionales">Ver más</button>
+          <p>GO Box, Fútbol uruguayo y extras.</p>
+          <button class="btn btn-primary" data-open-info="adicionales">Ver más</button>
         </article>
 
         <article class="card">
-          <div class="card-top">
-            <h3>Proceso de venta ventia</h3>
-            <span class="tag tag-c">Checklist</span>
+          <div class="card-head">
+            <h3>Proceso de venta</h3>
+            <span class="pill pill-green">Checklist</span>
           </div>
-          <p>Ingresar a ventia 
-Tomar un caso del inbox o casilla de entrada
-Llamar a cliente 
-Hacer propuesta 
-Cargar datos en SDS
-Cerrar caso.</p>
-          <button class="btn primary" data-open-info="proceso">Ver más</button>
+          <p>Diagnóstico → propuesta → cierre.</p>
+          <button class="btn btn-primary" data-open-info="proceso">Ver más</button>
         </article>
 
         <article class="card">
-          <div class="card-top">
-            <h3>Que datos necesitamos?</h3>
-            <span class="tag tag-a">CRM</span>
+          <div class="card-head">
+            <h3>Gestión datos del cliente</h3>
+            <span class="pill pill-blue">CRM</span>
           </div>
-          <p>Nombre
-Fecha de nacimiento 
-Cédula de identidad o pasaporte
-Teléfono 
-Correo electrónico (si la ingresamos luego le creamos nosotros un correo electrónico)
-Domicilio completo (dirección, localidad, departamento, referencias, código postal)
-Que plan desea contratar 
-</p>
-          <button class="btn primary" data-open-info="datos">Ver más</button>
+          <p>Campos mínimos y control de lead.</p>
+          <button class="btn btn-primary" data-open-info="datos">Ver más</button>
         </article>
 
         <article class="card">
-          <div class="card-top">
-            <h3>Tipo de resultados por cédula en SDS</h3>
-            <span class="tag tag-b">Guiones</span>
+          <div class="card-head">
+            <h3>Venta</h3>
+            <span class="pill pill-cyan">Guiones</span>
           </div>
-          <p> P1 P2 y P3- Se puede vender con TC o efectivo. Los P3 tienen los primeros dos decodificadores bonificados 
-          Riesgo crediticio - Se puede vender solo con TC
-          Deuda con DirecTV - no le podemos vender 
-</p>
-          <button class="btn primary" data-open-info="venta">Ver más</button>
+          <p>Mensajes listos para copiar/pegar.</p>
+          <button class="btn btn-primary" data-open-info="venta">Ver más</button>
         </article>
 
         <article class="card">
-          <div class="card-top">
+          <div class="card-head">
             <h3>SDS</h3>
-            <span class="tag tag-c">Carga en SDS</span>
+            <span class="pill pill-green">Soporte</span>
           </div>
-          <p>Ya cargar con toda la información recopilada. </p>
-          <button class="btn primary" data-open-info="sds">Ver más</button>
+          <p>Escalamiento y pasos útiles.</p>
+          <button class="btn btn-primary" data-open-info="sds">Ver más</button>
         </article>
       </div>
     </section>
@@ -112,7 +120,7 @@ Que plan desea contratar
     <!-- SECCIÓN 2 -->
     <section id="calc" class="section">
       <div class="section-head">
-        <h2>Calculadora de costo venta</h2>
+        <h2>Calculadora de costos</h2>
         <p>Respondé 5 preguntas. Resultado: costo de conexión + costo mensual.</p>
       </div>
 
@@ -120,24 +128,19 @@ Que plan desea contratar
         <div class="calc-top">
           <div>
             <div class="calc-title">Quiz de costos</div>
-            <div class="small-muted">Avanzá paso a paso y obtené el total.</div>
+            <div class="muted">Pasos guiados, sin errores.</div>
           </div>
-          <div class="calc-step">
-            <span id="stepLabel">Paso 1</span> / 5
-          </div>
+          <div class="calc-step"><span id="stepLabel">Paso 1</span> / 5</div>
         </div>
 
         <div class="progress" aria-hidden="true">
           <div class="progress-bar" id="progressBar" style="width:20%"></div>
         </div>
 
-        <!-- El JS renderiza cada pantalla del quiz acá -->
         <div id="quizRoot" class="quiz-root" aria-live="polite"></div>
 
-        <div class="quiz-note">
-          <div class="note">
-            <b>Reglas:</b> conexión depende de tipo + decos (+ GoBox). Mensual depende del plan + $280 por deco extra + fútbol.
-          </div>
+        <div class="note">
+          <b>Reglas:</b> conexión depende de tipo + decos (+ GoBox). Mensual depende del plan + $280 por deco extra + fútbol.
         </div>
       </div>
     </section>
@@ -146,7 +149,7 @@ Que plan desea contratar
     <section id="phones" class="section">
       <div class="section-head">
         <h2>Teléfonos de interés</h2>
-        <p>En el celular podés tocar “Llamar”.</p>
+        <p>En celular podés tocar “Llamar”.</p>
       </div>
 
       <div class="two">
@@ -178,10 +181,10 @@ Que plan desea contratar
           </div>
         </div>
 
-        <aside class="panel info">
-          <h3>Cajita de información</h3>
-          <p>Promo vigente, recordatorio de cierre, script del día, etc.</p>
-          <div class="note">
+        <aside class="panel panel-soft">
+          <h3 class="panel-title">Cajita de información</h3>
+          <p class="muted">Promo vigente, recordatorio de cierre, script del día, etc.</p>
+          <div class="note note-soft">
             Antes de cerrar: confirmar <b>dirección</b>, <b>horario</b> y <b>cantidad de decos</b>.
           </div>
         </aside>
@@ -193,7 +196,7 @@ Que plan desea contratar
     </footer>
   </main>
 
-  <!-- MODAL GENÉRICO -->
+  <!-- MODAL -->
   <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-backdrop" data-close></div>
 
