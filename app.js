@@ -1,49 +1,41 @@
 /* =========================================
-   APP.JS COMPLETO
+   APP.JS COMPLETO (para el HTML final)
    - Navbar scroll + activo
    - Modal reutilizable
-   - Cards con acordeón
+   - Cards con acordeón (abre 1 a la vez)
    - Copiar texto
-   - QUIZ 5 pasos (usa #quizRoot)
+   - QUIZ 5 pasos (usa #quizRoot) con tu lógica
 ========================================= */
 
 (() => {
-
-  /* =========================
-     HELPERS
-  ========================= */
+  // Helpers
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
   /* =========================
-     NAVBAR ACTIVO + SCROLL
+     NAVBAR: SCROLL SUAVE + ACTIVO
   ========================= */
-  const navLinks = $$(".nav a");
-
+  const navLinks = $$(".nav a").filter(a => a.getAttribute("href")?.startsWith("#"));
   navLinks.forEach(link => {
-    link.addEventListener("click", e => {
+    link.addEventListener("click", (e) => {
       e.preventDefault();
       const target = $(link.getAttribute("href"));
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
-      }
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
+
+  function setActive(href) {
+    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === href));
+  }
 
   window.addEventListener("scroll", () => {
-    let current = "";
-    document.querySelectorAll("section").forEach(sec => {
-      const top = sec.offsetTop - 120;
-      if (window.scrollY >= top) current = sec.id;
+    let current = "#cards";
+    document.querySelectorAll("main section[id]").forEach(sec => {
+      const top = sec.offsetTop - 140;
+      if (window.scrollY >= top) current = "#" + sec.id;
     });
-
-    navLinks.forEach(link => {
-      link.classList.toggle(
-        "active",
-        link.getAttribute("href") === "#" + current
-      );
-    });
-  });
+    setActive(current);
+  }, { passive: true });
 
   /* =========================
      MODAL
@@ -64,62 +56,89 @@
   function closeModal() {
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    modalBody.innerHTML = "";
   }
 
-  document.addEventListener("click", e => {
-    if (e.target.matches("[data-close]") || e.target.classList.contains("modal-backdrop")) {
+  document.addEventListener("click", (e) => {
+    if (e.target.matches("[data-close]") || e.target.closest("[data-close]") || e.target.classList.contains("modal-backdrop")) {
       closeModal();
     }
   });
 
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeModal();
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") closeModal();
   });
 
   /* =========================
-     CARDS CON ACORDEÓN
+     CARDS: INFO (ACORDEÓN)
   ========================= */
   const INFO = {
     planes: {
       title: "Planes",
-      desc: "Información de planes",
+      desc: "Ejemplo de contenido (editá a gusto)",
       items: [
-        { h: "Plata HD", html: "<p>Plan base ideal para hogares pequeños.</p>" },
-        { h: "Oro HD", html: "<p>Mayor cantidad de señales y contenido premium.</p>" }
+        {
+          h: "Tabla rápida (ejemplo)",
+          html: `
+            <table class="table">
+              <thead><tr><th>Plan</th><th>Base mensual</th><th>Notas</th></tr></thead>
+              <tbody>
+                <tr><td>Plata HD</td><td>$990</td><td>Para 1 deco</td></tr>
+                <tr><td>Plata HD Promo J</td><td>$890</td><td>Para 1 deco</td></tr>
+                <tr><td>Oro HD</td><td>$1190</td><td>Para 1 deco</td></tr>
+              </tbody>
+            </table>
+          `
+        },
+        {
+          h: "Tip de recomendación",
+          html: `<p class="small-muted">Preguntá cuántos TV/decos y qué mira más el cliente.</p>`
+        }
       ]
     },
     adicionales: {
       title: "Productos adicionales",
-      desc: "Extras disponibles",
+      desc: "Ejemplo de contenido",
       items: [
-        { h: "GO Box", html: "<p>Permite usar apps y streaming.</p>" },
-        { h: "Fútbol Uruguayo", html: "<p>Pack exclusivo de fútbol local.</p>" }
+        { h: "GO Box", html: `<p class="small-muted">Suma costo de conexión según tipo de cliente.</p>` },
+        { h: "Fútbol uruguayo", html: `<p class="small-muted">Suma $300 a la cuota mensual.</p>` }
       ]
     },
     proceso: {
       title: "Proceso de venta",
-      desc: "Guía paso a paso",
+      desc: "Checklist breve",
       items: [
-        { h: "Diagnóstico", html: "<p>Consultar TV, contenido y presupuesto.</p>" },
-        { h: "Cierre", html: "<p>Confirmar total mensual y fecha instalación.</p>" }
+        { h: "Diagnóstico", html: `<p class="small-muted">TV/decos, plan, extras, forma de pago.</p>` },
+        { h: "Cierre", html: `<p class="small-muted">Confirmar total, dirección y fecha de instalación.</p>` }
       ]
     },
     datos: {
-      title: "Gestión de datos",
-      desc: "Información necesaria",
+      title: "Gestión de datos del cliente",
+      desc: "Campos mínimos",
       items: [
-        { h: "Datos mínimos", html: "<p>Nombre, CI, Dirección, Teléfono.</p>" }
+        { h: "Datos", html: `<p class="small-muted">Nombre, CI, teléfono, dirección, horario.</p>` }
       ]
     },
     venta: {
-      title: "Guiones de venta",
-      desc: "Mensajes rápidos",
+      title: "Venta",
+      desc: "Guiones cortos",
       items: [
         {
           h: "Mensaje inicial",
           html: `
-            <div class="codebox" id="txt1">Hola 👋 ¿Qué plan te interesa y cuántos decos?</div>
-            <button class="btn primary" data-copy="#txt1">Copiar</button>
+            <div class="codebox" id="txt_hi">Hola 👋 ¿Qué plan te interesa y cuántos decodificadores necesitás?</div>
+            <div class="copyline">
+              <button class="btn primary" data-copy="#txt_hi">Copiar</button>
+            </div>
+          `
+        },
+        {
+          h: "Cierre con total",
+          html: `
+            <div class="codebox" id="txt_close">Perfecto. Conexión: $X. Cuota mensual total: $Y. ¿Coordinamos instalación?</div>
+            <div class="copyline">
+              <button class="btn primary" data-copy="#txt_close">Copiar</button>
+            </div>
           `
         }
       ]
@@ -128,23 +147,37 @@
       title: "SDS",
       desc: "Soporte y escalamiento",
       items: [
-        { h: "Escalar caso", html: "<p>Enviar CI + Dirección + Problema.</p>" }
+        {
+          h: "Escalar caso",
+          html: `
+            <div class="codebox" id="txt_sds">CI + Dirección + Teléfono + Descripción + Fotos (si aplica)</div>
+            <div class="copyline">
+              <button class="btn primary" data-copy="#txt_sds">Copiar</button>
+            </div>
+          `
+        }
       ]
     }
   };
 
-  function buildAccordion(items) {
-    return items.map((item, i) => `
-      <div class="acc-item">
-        <button class="acc-btn">${item.h}</button>
-        <div class="acc-panel" ${i !== 0 ? "hidden" : ""}>
-          ${item.html}
-        </div>
+  function accordionHTML(items) {
+    return `
+      <div class="acc">
+        ${items.map((it, idx) => `
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="${idx === 0 ? "true" : "false"}">
+              <span>${it.h}</span><span class="chev">${idx === 0 ? "−" : "+"}</span>
+            </button>
+            <div class="acc-panel" ${idx === 0 ? "" : "hidden"}>
+              ${it.html}
+            </div>
+          </div>
+        `).join("")}
       </div>
-    `).join("");
+    `;
   }
 
-  document.addEventListener("click", e => {
+  document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-open-info]");
     if (!btn) return;
 
@@ -155,164 +188,330 @@
     openModal({
       title: data.title,
       desc: data.desc,
-      html: `<div class="acc">${buildAccordion(data.items)}</div>`
+      html: accordionHTML(data.items)
     });
   });
 
-  document.addEventListener("click", e => {
-    if (e.target.classList.contains("acc-btn")) {
-      const panel = e.target.nextElementSibling;
-      panel.hidden = !panel.hidden;
-    }
+  // acordeón: abre 1 y cierra los demás (dentro del modal)
+  document.addEventListener("click", (e) => {
+    const accBtn = e.target.closest(".acc-btn");
+    if (!accBtn) return;
+
+    const acc = accBtn.closest(".acc");
+    if (!acc) return;
+
+    // cerrar todos
+    $$(".acc-panel", acc).forEach(p => p.hidden = true);
+    $$(".acc-btn", acc).forEach(b => b.setAttribute("aria-expanded", "false"));
+    $$(".chev", acc).forEach(c => (c.textContent = "+"));
+
+    // abrir actual
+    const panel = accBtn.parentElement.querySelector(".acc-panel");
+    if (panel) panel.hidden = false;
+    accBtn.setAttribute("aria-expanded", "true");
+    const chev = accBtn.querySelector(".chev");
+    if (chev) chev.textContent = "−";
   });
 
   /* =========================
      COPIAR TEXTO
   ========================= */
-  document.addEventListener("click", async e => {
+  document.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-copy]");
     if (!btn) return;
-    const target = $(btn.getAttribute("data-copy"));
+
+    const sel = btn.getAttribute("data-copy");
+    const target = sel ? $(sel) : null;
     if (!target) return;
 
-    await navigator.clipboard.writeText(target.textContent.trim());
-    btn.textContent = "Copiado ✅";
-    setTimeout(() => btn.textContent = "Copiar", 1000);
+    const text = target.textContent.trim();
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      const old = btn.textContent;
+      btn.textContent = "Copiado ✅";
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = old;
+        btn.disabled = false;
+      }, 900);
+    } catch {
+      alert("No se pudo copiar. Copiá manualmente.");
+    }
   });
 
   /* =========================
      QUIZ NUEVO (usa #quizRoot)
+     Lógica exacta solicitada
   ========================= */
   const quizRoot = $("#quizRoot");
   const stepLabel = $("#stepLabel");
   const progressBar = $("#progressBar");
 
-  if (!quizRoot) return;
+  if (!quizRoot || !stepLabel || !progressBar) return;
 
+  // Mensual
   const PLAN_MENSUAL = {
     plata: 990,
     plata_promo_j: 890,
     oro: 1190
   };
-
   const EXTRA_DECO = 280;
-  const FUTBOL = 300;
+  const FUTBOL_MENSUAL = 300;
 
+  // Conexión según tipo y decos
   function conexionBase(tipo, decos) {
-    if (decos === 1 || decos === 2)
-      return tipo === "p12" ? 690 : 0;
-    if (decos === 3)
-      return tipo === "p12" ? 1789 : 1099;
-    if (decos === 4)
-      return tipo === "p12" ? 2888 : 2198;
+    // tipo: "p12" (P1/P2) o "p3tc" (P3/TC)
+    if (decos === 1 || decos === 2) return (tipo === "p12") ? 690 : 0;
+    if (decos === 3) return (tipo === "p12") ? 1789 : 1099;
+    if (decos === 4) return (tipo === "p12") ? 2888 : 2198;
     return 0;
   }
-
-  function conexionGo(tipo) {
-    return tipo === "p12" ? 1000 : 500;
+  function conexionGoBoxExtra(tipo) {
+    return (tipo === "p12") ? 1000 : 500;
   }
 
-  let quiz = {};
+  let quiz = {
+    tipo: null,     // "p12" | "p3tc"
+    gobox: null,    // boolean
+    futbol: null,   // boolean
+    plan: null,     // "plata" | "plata_promo_j" | "oro"
+    decos: null     // 1..4
+  };
   let step = 0;
 
   const screens = [
     {
-      html: `
-        <h3>¿Tipo de cliente?</h3>
-        <label><input type="radio" name="tipo" value="p12"> P1 o P2</label>
-        <label><input type="radio" name="tipo" value="p3tc"> P3 o TC</label>
-        <button class="btn primary next">Siguiente</button>
+      key: "tipo",
+      title: "Pregunta 1 · ¿Tipo de cliente?",
+      content: `
+        <label class="option">
+          <input type="radio" name="tipo" value="p12">
+          <span><b>P1 o P2</b></span>
+        </label>
+        <label class="option">
+          <input type="radio" name="tipo" value="p3tc">
+          <span><b>P3 o TC</b></span>
+        </label>
       `
     },
     {
-      html: `
-        <h3>¿Quiere GO Box?</h3>
-        <label><input type="radio" name="gobox" value="si"> Sí</label>
-        <label><input type="radio" name="gobox" value="no"> No</label>
-        <button class="btn back">Atrás</button>
-        <button class="btn primary next">Siguiente</button>
+      key: "gobox",
+      title: "Pregunta 2 · ¿Quiere GO Box?",
+      content: `
+        <label class="option">
+          <input type="radio" name="gobox" value="si">
+          <span>Sí</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="gobox" value="no">
+          <span>No</span>
+        </label>
       `
     },
     {
-      html: `
-        <h3>¿Quiere Fútbol Uruguayo?</h3>
-        <label><input type="radio" name="futbol" value="si"> Sí</label>
-        <label><input type="radio" name="futbol" value="no"> No</label>
-        <button class="btn back">Atrás</button>
-        <button class="btn primary next">Siguiente</button>
+      key: "futbol",
+      title: "Pregunta 3 · ¿Quiere Fútbol Uruguayo?",
+      content: `
+        <label class="option">
+          <input type="radio" name="futbol" value="si">
+          <span>Sí</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="futbol" value="no">
+          <span>No</span>
+        </label>
       `
     },
     {
-      html: `
-        <h3>¿Qué plan desea?</h3>
-        <label><input type="radio" name="plan" value="plata"> Plata HD ($990)</label>
-        <label><input type="radio" name="plan" value="plata_promo_j"> Plata HD Promo J ($890)</label>
-        <label><input type="radio" name="plan" value="oro"> Oro HD ($1190)</label>
-        <button class="btn back">Atrás</button>
-        <button class="btn primary next">Siguiente</button>
+      key: "plan",
+      title: "Pregunta 4 · ¿Qué plan desea?",
+      content: `
+        <label class="option">
+          <input type="radio" name="plan" value="plata">
+          <span><b>Plata HD</b> — $990 mensual (1 deco)</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="plan" value="plata_promo_j">
+          <span><b>Plata HD Promo J</b> — $890 mensual (1 deco)</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="plan" value="oro">
+          <span><b>Oro HD</b> — $1190 mensual (1 deco)</span>
+        </label>
       `
     },
     {
-      html: `
-        <h3>¿Cuántos decodificadores?</h3>
-        <label><input type="radio" name="decos" value="1"> 1</label>
-        <label><input type="radio" name="decos" value="2"> 2</label>
-        <label><input type="radio" name="decos" value="3"> 3</label>
-        <label><input type="radio" name="decos" value="4"> 4</label>
-        <button class="btn back">Atrás</button>
-        <button class="btn success finish">Ver resultado</button>
+      key: "decos",
+      title: "Pregunta 5 · ¿Cuántos decodificadores quiere?",
+      content: `
+        <div class="row">
+          <label class="chip"><input type="radio" name="decos" value="1"><span>1</span></label>
+          <label class="chip"><input type="radio" name="decos" value="2"><span>2</span></label>
+          <label class="chip"><input type="radio" name="decos" value="3"><span>3</span></label>
+          <label class="chip"><input type="radio" name="decos" value="4"><span>4</span></label>
+        </div>
+        <p class="hint">Extras: +$${EXTRA_DECO}/mes desde el 2º deco · Fútbol +$${FUTBOL_MENSUAL}/mes.</p>
       `
     }
   ];
 
-  function render() {
-    quizRoot.innerHTML = screens[step].html;
+  function renderQuiz() {
+    const s = screens[step];
+    const total = screens.length;
+
     stepLabel.textContent = `Paso ${step + 1}`;
-    progressBar.style.width = ((step + 1) / screens.length) * 100 + "%";
+    progressBar.style.width = `${((step + 1) / total) * 100}%`;
+
+    quizRoot.innerHTML = `
+      <h3>${s.title}</h3>
+      ${s.content}
+      <div class="err" id="quizErr" hidden>Elegí una opción para continuar.</div>
+      <div class="actions">
+        ${step > 0 ? `<button class="btn" data-back>Atrás</button>` : ``}
+        ${step < total - 1
+          ? `<button class="btn primary" data-next>Siguiente</button>`
+          : `<button class="btn success" data-finish>Ver resultado</button>`
+        }
+      </div>
+    `;
+
+    // Rehidratar selección guardada
+    const key = s.key;
+    const saved = quiz[key];
+    if (saved !== null && saved !== undefined) {
+      const val = typeof saved === "boolean" ? (saved ? "si" : "no") : String(saved);
+      const input = quizRoot.querySelector(`input[name="${key}"][value="${val}"]`);
+      if (input) input.checked = true;
+    }
   }
 
-  quizRoot.addEventListener("click", e => {
-    if (e.target.classList.contains("next")) {
-      const inputs = quizRoot.querySelectorAll("input:checked");
-      if (inputs.length === 0) return;
-      quiz[inputs[0].name] = inputs[0].value;
-      step++;
-      render();
-    }
+  function setErr(show, msg) {
+    const err = $("#quizErr");
+    if (!err) return;
+    err.textContent = msg || "Elegí una opción para continuar.";
+    err.hidden = !show;
+  }
 
-    if (e.target.classList.contains("back")) {
-      step--;
-      render();
-    }
+  function readCurrentAnswer() {
+    const key = screens[step].key;
+    const checked = quizRoot.querySelector(`input[name="${key}"]:checked`);
+    if (!checked) return null;
 
-    if (e.target.classList.contains("finish")) {
-      const val = quizRoot.querySelector("input:checked");
-      if (!val) return;
-      quiz[val.name] = val.value;
+    if (key === "decos") return parseInt(checked.value, 10);
+    if (key === "gobox" || key === "futbol") return checked.value === "si";
+    return checked.value; // tipo, plan
+  }
 
-      const tipo = quiz.tipo;
-      const decos = parseInt(quiz.decos);
-      let conexion = conexionBase(tipo, decos);
-      if (quiz.gobox === "si") conexion += conexionGo(tipo);
+  function computeResult() {
+    const tipo = quiz.tipo;
+    const decos = quiz.decos;
 
-      let mensual = PLAN_MENSUAL[quiz.plan];
-      mensual += (decos - 1) * EXTRA_DECO;
-      if (quiz.futbol === "si") mensual += FUTBOL;
+    let conexion = conexionBase(tipo, decos);
+    if (quiz.gobox === true) conexion += conexionGoBoxExtra(tipo);
 
-      openModal({
-        title: "Resultado",
-        desc: "Costo calculado",
-        html: `
-          <div class="panel">
-            <div><b>Costo de conexión:</b> $${conexion}</div>
-            <div><b>Costo mensual:</b> $${mensual}</div>
-            <button class="btn primary" data-close>Cerrar</button>
+    const base = PLAN_MENSUAL[quiz.plan] ?? 0;
+    const extras = Math.max(0, decos - 1) * EXTRA_DECO;
+    let mensual = base + extras;
+    if (quiz.futbol === true) mensual += FUTBOL_MENSUAL;
+
+    return { conexion, mensual, base, extras };
+  }
+
+  function showResult() {
+    const { conexion, mensual, base, extras } = computeResult();
+
+    const tipoLabel = quiz.tipo === "p12" ? "P1 o P2" : "P3 o TC";
+    const planLabel = quiz.plan === "plata" ? "Plata HD" : quiz.plan === "plata_promo_j" ? "Plata HD Promo J" : "Oro HD";
+    const goConn = quiz.gobox ? conexionGoBoxExtra(quiz.tipo) : 0;
+    const connBase = conexionBase(quiz.tipo, quiz.decos);
+
+    openModal({
+      title: "Resultado de costos",
+      desc: "Costo de conexión y costo mensual calculados",
+      html: `
+        <div class="panel" style="margin-top:0;">
+          <div><b>Costo de conexión:</b> $${conexion}</div>
+          <div style="margin-top:8px;"><b>Costo mensual:</b> $${mensual}</div>
+
+          <div style="height:12px"></div>
+          <div class="small-muted">Detalle</div>
+          <div class="codebox" style="margin-top:8px;">
+Tipo de cliente: ${tipoLabel}
+Plan: ${planLabel} (base $${base})
+Decodificadores: ${quiz.decos} (extras mensual $${extras})
+GO Box: ${quiz.gobox ? "Sí" : "No"} (extra conexión $${goConn})
+Fútbol uruguayo: ${quiz.futbol ? "Sí" : "No"} (extra mensual $${quiz.futbol ? FUTBOL_MENSUAL : 0})
+Conexión base: $${connBase}
           </div>
-        `
+
+          <div class="copyline">
+            <button class="btn primary" id="resetQuizBtn">Reiniciar quiz</button>
+            <button class="btn" data-close>Cerrar</button>
+          </div>
+        </div>
+      `
+    });
+
+    setTimeout(() => {
+      const b = $("#resetQuizBtn");
+      if (b) b.addEventListener("click", () => {
+        closeModal();
+        resetAll();
       });
+    }, 0);
+  }
+
+  function resetAll() {
+    quiz = { tipo: null, gobox: null, futbol: null, plan: null, decos: null };
+    step = 0;
+    renderQuiz();
+  }
+
+  quizRoot.addEventListener("click", (e) => {
+    if (e.target.closest("[data-next]")) {
+      setErr(false);
+      const ans = readCurrentAnswer();
+      if (ans === null) return setErr(true);
+
+      const key = screens[step].key;
+      quiz[key] = ans;
+
+      step++;
+      renderQuiz();
+      return;
+    }
+
+    if (e.target.closest("[data-back]")) {
+      setErr(false);
+
+      const ans = readCurrentAnswer();
+      const key = screens[step].key;
+      if (ans !== null) quiz[key] = ans;
+
+      step = Math.max(0, step - 1);
+      renderQuiz();
+      return;
+    }
+
+    if (e.target.closest("[data-finish]")) {
+      setErr(false);
+      const ans = readCurrentAnswer();
+      if (ans === null) return setErr(true);
+
+      quiz[screens[step].key] = ans;
+
+      // Validación final
+      if (!quiz.tipo || quiz.gobox === null || quiz.futbol === null || !quiz.plan || !quiz.decos) {
+        return setErr(true, "Faltan respuestas. Volvé y completá todo.");
+      }
+
+      showResult();
     }
   });
 
-  render();
+  // Init
+  renderQuiz();
 
 })();
