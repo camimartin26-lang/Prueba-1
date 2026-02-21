@@ -1,3 +1,9 @@
+/* styles.css — COMPLETO (moderno + modal OPACO)
+   - Diseño moderno con gradientes y cards
+   - Responsive
+   - Modal sin transparencia (opaco)
+*/
+
 :root{
   --bg0:#050816;
   --bg1:#0b1026;
@@ -51,6 +57,7 @@ html,body{
     linear-gradient(180deg, var(--bg0), var(--bg1));
   min-height:100%;
 }
+
 a{ color:inherit; text-decoration:none; }
 .wrap{ width:min(1080px, 92vw); margin:0 auto; }
 .small-muted{ color: var(--muted); font-size: .95rem; }
@@ -58,12 +65,11 @@ a{ color:inherit; text-decoration:none; }
 /* Topbar */
 .topbar{
   position: sticky; top:0; z-index:10;
-  backdrop-filter: blur(12px);
   background: rgba(0,0,0,.18);
   border-bottom: 1px solid var(--border);
 }
 @media (prefers-color-scheme: light){
-  .topbar{ background: rgba(255,255,255,.55); }
+  .topbar{ background: rgba(255,255,255,.70); }
 }
 .topbar .wrap{
   display:flex; align-items:center; justify-content:space-between;
@@ -110,7 +116,6 @@ a{ color:inherit; text-decoration:none; }
   border: 1px solid var(--border);
   background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
   box-shadow: var(--shadowSoft);
-  backdrop-filter: blur(14px);
 }
 .hero h1{
   margin:0 0 6px;
@@ -149,7 +154,6 @@ a{ color:inherit; text-decoration:none; }
   border: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
   box-shadow: var(--shadowSoft);
-  backdrop-filter: blur(14px);
   display:flex;
   flex-direction:column;
   gap:8px;
@@ -198,7 +202,6 @@ a{ color:inherit; text-decoration:none; }
   border: 1px solid var(--border);
   background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
   box-shadow: var(--shadowSoft);
-  backdrop-filter: blur(14px);
 }
 
 /* Buttons */
@@ -299,7 +302,6 @@ a{ color:inherit; text-decoration:none; }
   font-size: .92rem;
 }
 .hint{ margin:12px 0 0; color: var(--muted); font-size:.92rem; }
-
 .quiz-note{ margin-top:12px; }
 
 /* Phones + Info */
@@ -344,20 +346,26 @@ a{ color:inherit; text-decoration:none; }
   font-size: .92rem;
 }
 
-/* Modal */
+/* =====================================================
+   MODAL (OPACO - SIN TRANSPARENCIA)
+   - backdrop oscuro sólido
+   - tarjeta opaca (oscuro: bg1, claro: blanco)
+===================================================== */
+
 .modal[aria-hidden="true"]{ display:none; }
 .modal{
   position:fixed; inset:0;
   display:grid; place-items:center;
   z-index: 50;
 }
+
 .modal-backdrop{
   position:absolute; inset:0;
-  background: rgba(0,0,0,.60);
-  backdrop-filter: blur(3px);
+  background: rgba(0,0,0,.75);
 }
+
 @media (prefers-color-scheme: light){
-  .modal-backdrop{ background: rgba(2,6,23,.40); }
+  .modal-backdrop{ background: rgba(2,6,23,.55); }
 }
 
 .modal-card{
@@ -367,26 +375,39 @@ a{ color:inherit; text-decoration:none; }
   overflow:auto;
   border-radius: 22px;
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  background: var(--bg1);
   box-shadow: var(--shadow);
 }
+
+@media (prefers-color-scheme: light){
+  .modal-card{ background: #ffffff; }
+}
+
 .modal-head{
   display:flex; justify-content:space-between; gap: 12px; align-items:flex-start;
   padding: 14px;
   border-bottom: 1px solid var(--border);
   position: sticky; top:0;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.08));
-  backdrop-filter: blur(14px);
+  background: var(--bg1);
 }
+
+@media (prefers-color-scheme: light){
+  .modal-head{ background: #ffffff; }
+}
+
 .modal-title{ font-weight: 950; letter-spacing: -.15px; font-size: 1.05rem; }
 .modal-desc{ color: var(--muted); font-size: .92rem; margin-top: 3px; }
 .modal-body{ padding: 14px; }
+
 .modal-foot{
   padding: 14px;
   border-top: 1px solid var(--border);
   display:flex;
   justify-content:flex-end;
-  background: rgba(255,255,255,.06);
+  background: var(--bg1);
+}
+@media (prefers-color-scheme: light){
+  .modal-foot{ background: #ffffff; }
 }
 
 /* Accordion */
@@ -464,4 +485,4 @@ a{ color:inherit; text-decoration:none; }
   justify-content:flex-end;
   margin-top: 10px;
   flex-wrap:wrap;
-       }
+  }
