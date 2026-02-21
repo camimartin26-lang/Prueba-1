@@ -83,16 +83,17 @@
             <table class="table">
               <thead><tr><th>Plan</th><th>Base mensual</th><th>Notas</th></tr></thead>
               <tbody>
-                <tr><td>Plata HD</td><td>$990</td><td>Para 1 deco</td></tr>
-                <tr><td>Plata HD Promo J</td><td>$890</td><td>Para 1 deco</td></tr>
-                <tr><td>Oro HD</td><td>$1190</td><td>Para 1 deco</td></tr>
+                <tr><td>Plata HD</td><td>$990</td><td>147 canales HD</td></tr>
+                <tr><td>Plata HD Promo J</td><td>$890</td><td>Por cupos </td></tr>
+                <tr><td>Oro HD</td><td>$1190</td><td>204 canales HD </td></tr>
               </tbody>
             </table>
           `
         },
         {
-          h: "Tip de recomendación",
-          html: `<p class="small-muted">Preguntá cuántos TV/decos y qué mira más el cliente.</p>`
+          h: "Info todos los planes ",
+          html: `<p class="small-muted">Todos los planes incluyen un decodificador, Prime Video y DirecTV Go gratis.
+En Montevideo incluyen un mes de HBO MAX gratis y en el interior de Universal+, luego quedan a un 40% de descuento</p>`
         }
       ]
     },
