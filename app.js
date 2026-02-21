@@ -1,458 +1,492 @@
-// ===============================
-// DATA: contenido de cada Card (modal con acordeón)
-// ===============================
-const INFO = {
-  planes: {
-    title: "Planes",
-    desc: "Ejemplos: tabla rápida + preguntas para recomendar + tip de cierre",
-    items: [
-      {
-        h: "Tabla rápida de planes (ejemplo)",
-        html: `
-          <p>Usá esto como plantilla. Cambiá nombres y precios reales.</p>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Plan</th><th>Ideal para</th><th>Gancho</th><th>Upsell</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><b>Plata HD</b></td>
-                <td>Hogar chico</td>
-                <td>Precio/beneficio</td>
-                <td>+ 2do deco / GO Box</td>
-              </tr>
-              <tr>
-                <td><b>Oro HD</b></td>
-                <td>Familias</td>
-                <td>Más señales</td>
-                <td>Fútbol / pack premium</td>
-              </tr>
-              <tr>
-                <td><b>Premium</b></td>
-                <td>Exigentes</td>
-                <td>“Todo incluido”</td>
-                <td>MultiTV + extras</td>
-              </tr>
-            </tbody>
-          </table>
-        `
-      },
-      {
-        h: "Preguntas para recomendar bien",
-        html: `
-          <p>Checklist rápido:</p>
-          <ul>
-            <li>¿Cuántos TV y habitaciones?</li>
-            <li>¿Qué miran más: fútbol, series, infantil?</li>
-            <li>¿Prioriza precio o contenido?</li>
-            <li>¿Tiene buen internet para sumar streaming?</li>
-          </ul>
-        `
-      },
-      {
-        h: "Tip de cierre",
-        html: `
-          <p>Terminá con el total mensual + razón:</p>
-          <div class="codebox">Te recomiendo este plan porque se ajusta a lo que miran y te queda el total mensual claro.</div>
-        `
-      }
-    ]
-  },
+/* app.js — COMPLETO
+   - Navbar activo por scroll + scroll suave
+   - Modal reutilizable (Info + Resultado)
+   - Acordeón (abre 1 a la vez)
+   - Copiar con feedback
+   - QUIZ con tu lógica (5 pantallas)
+*/
 
-  adicionales: {
-    title: "Productos adicionales",
-    desc: "GO Box, fútbol uruguayo, decos extra y cómo ofrecer",
-    items: [
-      {
-        h: "Adicionales típicos (ejemplo)",
-        html: `
-          <ul>
-            <li><b>GO Box</b>: suma apps/streaming (+$300/mes ejemplo)</li>
-            <li><b>Fútbol uruguayo</b>: cierre emocional (+$450/mes ejemplo)</li>
-            <li><b>Decos extra</b>: multiTV (+$200/mes c/u ejemplo)</li>
-          </ul>
-        `
-      },
-      {
-        h: "Mini guión para ofrecer",
-        html: `
-          <p>Uno y simple (sin saturar):</p>
-          <div class="codebox" id="txt_offer">¿Te interesa sumar GO Box o fútbol uruguayo? Así te paso el total mensual.</div>
-          <div class="copyline">
-            <button class="btn primary" data-copy="#txt_offer">Copiar</button>
-            <span class="small-muted">Listo para WhatsApp.</span>
-          </div>
-        `
-      }
-    ]
-  },
+(() => {
+  // ===============================
+  // Helpers
+  // ===============================
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
-  proceso: {
-    title: "Proceso de venta",
-    desc: "Diagnóstico → propuesta → objeciones → cierre → seguimiento",
-    items: [
-      {
-        h: "Paso 1: Diagnóstico (preguntas clave)",
-        html: `
-          <ul>
-            <li>Dirección completa + referencias</li>
-            <li>Cantidad de TV/decos</li>
-            <li>Interés principal (fútbol/series/infantil)</li>
-            <li>Forma de pago</li>
-          </ul>
-        `
-      },
-      {
-        h: "Paso 2: Propuesta (en 1 mensaje)",
-        html: `
-          <div class="codebox" id="txt_prop">Plan + Decos + Adicional (si aplica)\nConexión: $X\nCuota mensual total: $Y\nInstalación: día/horario</div>
-          <div class="copyline">
-            <button class="btn primary" data-copy="#txt_prop">Copiar</button>
-            <span class="small-muted">Estructura de oferta.</span>
-          </div>
-        `
-      },
-      {
-        h: "Paso 3: Objeciones rápidas",
-        html: `
-          <ul>
-            <li><b>Precio</b>: “Lo ajusto al presupuesto y te dejo el total mensual claro.”</li>
-            <li><b>Instalación</b>: “Coordino en la franja que te sirva.”</li>
-            <li><b>Dudas</b>: “Te lo resumo en 1 mensaje: conexión + total mensual.”</li>
-          </ul>
-        `
-      }
-    ]
-  },
+  // ===============================
+  // Navbar: scroll suave + activo por sección
+  // ===============================
+  const navLinks = $$(".nav a").filter(a => a.getAttribute("href")?.startsWith("#"));
+  const sections = navLinks.map(a => $(a.getAttribute("href"))).filter(Boolean);
 
-  datos: {
-    title: "Gestión datos del cliente",
-    desc: "Campos mínimos + estado del lead (ejemplo)",
-    items: [
-      {
-        h: "Campos mínimos",
-        html: `
-          <ul>
-            <li>Nombre y apellido</li>
-            <li>Documento</li>
-            <li>Teléfono/WhatsApp</li>
-            <li>Dirección completa + referencia</li>
-            <li>Horario preferido</li>
-          </ul>
-        `
-      },
-      {
-        h: "Seguimiento (estado)",
-        html: `
-          <p>Ejemplo de estado interno:</p>
-          <div class="codebox">Nuevo → Cotizado → Pendiente confirmación → Agendado → Instalado</div>
-        `
-      }
-    ]
-  },
-
-  venta: {
-    title: "Venta",
-    desc: "Guiones listos + copiar/pegar",
-    items: [
-      {
-        h: "Mensaje inicial",
-        html: `
-          <div class="codebox" id="txt_hi">Hola 👋 ¿Cuántos televisores querés conectar y qué miran más: fútbol, series o infantil?</div>
-          <div class="copyline">
-            <button class="btn primary" data-copy="#txt_hi">Copiar</button>
-          </div>
-        `
-      },
-      {
-        h: "Cierre con total mensual",
-        html: `
-          <div class="codebox" id="txt_close">Perfecto. Conexión: $X. Cuota mensual total: $Y. ¿Te sirve coordinar instalación esta semana?</div>
-          <div class="copyline">
-            <button class="btn primary" data-copy="#txt_close">Copiar</button>
-          </div>
-        `
-      },
-      {
-        h: "Objeción: “lo pienso”",
-        html: `
-          <div class="codebox" id="txt_think">Dale 😊 ¿qué te gustaría definir para decidir: precio, instalación o contenido? Te lo dejo clarito en 1 mensaje.</div>
-          <div class="copyline">
-            <button class="btn primary" data-copy="#txt_think">Copiar</button>
-          </div>
-        `
-      }
-    ]
-  },
-
-  sds: {
-    title: "SDS",
-    desc: "Soporte, fallas comunes y escalamiento",
-    items: [
-      {
-        h: "Checklist previo a instalación",
-        html: `
-          <ul>
-            <li>Dirección + referencia</li>
-            <li>Contacto en domicilio</li>
-            <li>Horario disponible</li>
-            <li>Acceso a lugar de instalación</li>
-          </ul>
-        `
-      },
-      {
-        h: "Escalamiento (qué enviar)",
-        html: `
-          <div class="codebox">CI + Dirección + Teléfono + Descripción + Cuándo empezó + Fotos (si aplica)</div>
-        `
-      }
-    ]
-  }
-};
-
-// ===============================
-// MODAL + ACORDEÓN
-// ===============================
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalDesc = document.getElementById("modalDesc");
-const modalBody = document.getElementById("modalBody");
-
-function openModal() {
-  modal.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
-}
-function closeModal() {
-  modal.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-  modalBody.innerHTML = "";
-}
-
-function buildAccordion(items) {
-  const wrap = document.createElement("div");
-  wrap.className = "acc";
-
-  items.forEach((it, idx) => {
-    const item = document.createElement("div");
-    item.className = "acc-item";
-
-    const btn = document.createElement("button");
-    btn.className = "acc-btn";
-    btn.type = "button";
-    btn.setAttribute("aria-expanded", idx === 0 ? "true" : "false");
-    btn.innerHTML = `<span>${it.h}</span><span class="chev">${idx === 0 ? "−" : "+"}</span>`;
-
-    const panel = document.createElement("div");
-    panel.className = "acc-panel";
-    panel.hidden = idx !== 0;
-    panel.innerHTML = it.html;
-
-    btn.addEventListener("click", () => {
-      const expanded = btn.getAttribute("aria-expanded") === "true";
-      btn.setAttribute("aria-expanded", expanded ? "false" : "true");
-      panel.hidden = expanded;
-      btn.querySelector(".chev").textContent = expanded ? "+" : "−";
+  navLinks.forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = $(a.getAttribute("href"));
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
-
-    item.appendChild(btn);
-    item.appendChild(panel);
-    wrap.appendChild(item);
   });
 
-  return wrap;
-}
+  function setActiveNav(id) {
+    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === `#${id}`));
+  }
 
-document.addEventListener("click", async (e) => {
-  // Abrir info
-  const openBtn = e.target.closest("[data-open-info]");
-  if (openBtn) {
+  let lastActive = "";
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY;
+    let current = "";
+    for (const sec of sections) {
+      const top = sec.offsetTop - 140;
+      if (y >= top) current = sec.id;
+    }
+    if (current && current !== lastActive) {
+      lastActive = current;
+      setActiveNav(current);
+    }
+  }, { passive: true });
+
+  if (sections[0]) setActiveNav(sections[0].id);
+
+  // ===============================
+  // Modal (reutilizable)
+  // ===============================
+  const modal = $("#modal");
+  const modalTitle = $("#modalTitle");
+  const modalDesc = $("#modalDesc");
+  const modalBody = $("#modalBody");
+
+  function openModal({ title = "Info", desc = "", bodyHTML = "" } = {}) {
+    modalTitle.textContent = title;
+    modalDesc.textContent = desc;
+    modalBody.innerHTML = bodyHTML;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    modalBody.innerHTML = "";
+  }
+
+  document.addEventListener("click", (e) => {
+    if (e.target.matches("[data-close]") || e.target.closest("[data-close]")) {
+      closeModal();
+      return;
+    }
+    if (e.target.classList.contains("modal-backdrop")) {
+      closeModal();
+      return;
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") closeModal();
+  });
+
+  // ===============================
+  // Contenido Cards (ejemplo mínimo)
+  // ===============================
+  const INFO = {
+    planes: {
+      title: "Planes",
+      desc: "Info de ejemplo",
+      items: [{ h: "Resumen", html: `<p class="small-muted">Cargá acá tu contenido.</p>` }]
+    },
+    adicionales: {
+      title: "Productos adicionales",
+      desc: "Info de ejemplo",
+      items: [{ h: "Resumen", html: `<p class="small-muted">GO Box, Fútbol, etc.</p>` }]
+    },
+    proceso: {
+      title: "Proceso de venta",
+      desc: "Info de ejemplo",
+      items: [{ h: "Checklist", html: `<p class="small-muted">Diagnóstico → Propuesta → Cierre.</p>` }]
+    },
+    datos: {
+      title: "Gestión datos del cliente",
+      desc: "Info de ejemplo",
+      items: [{ h: "Campos", html: `<p class="small-muted">Nombre, CI, Dirección, Teléfono…</p>` }]
+    },
+    venta: {
+      title: "Venta",
+      desc: "Guión de ejemplo",
+      items: [{
+        h: "Mensaje",
+        html: `
+          <div class="codebox" id="txt_hi">Hola 👋 ¿Qué plan te interesa y cuántos decos necesitás?</div>
+          <div class="copyline"><button class="btn primary" data-copy="#txt_hi">Copiar</button></div>
+        `
+      }]
+    },
+    sds: {
+      title: "SDS",
+      desc: "Info de ejemplo",
+      items: [{ h: "Escalamiento", html: `<p class="small-muted">CI + Dirección + Problema + Fotos.</p>` }]
+    }
+  };
+
+  function buildAccordion(items) {
+    const wrap = document.createElement("div");
+    wrap.className = "acc";
+
+    items.forEach((it, idx) => {
+      const item = document.createElement("div");
+      item.className = "acc-item";
+
+      const btn = document.createElement("button");
+      btn.className = "acc-btn";
+      btn.type = "button";
+      btn.setAttribute("aria-expanded", idx === 0 ? "true" : "false");
+      btn.innerHTML = `<span>${it.h}</span><span class="chev">${idx === 0 ? "−" : "+"}</span>`;
+
+      const panel = document.createElement("div");
+      panel.className = "acc-panel";
+      panel.hidden = idx !== 0;
+      panel.innerHTML = it.html;
+
+      btn.addEventListener("click", () => {
+        $$(".acc-panel", wrap).forEach(p => (p.hidden = true));
+        $$(".acc-btn", wrap).forEach(b => b.setAttribute("aria-expanded", "false"));
+        $$(".chev", wrap).forEach(c => (c.textContent = "+"));
+
+        panel.hidden = false;
+        btn.setAttribute("aria-expanded", "true");
+        btn.querySelector(".chev").textContent = "−";
+      });
+
+      item.appendChild(btn);
+      item.appendChild(panel);
+      wrap.appendChild(item);
+    });
+
+    return wrap;
+  }
+
+  document.addEventListener("click", (e) => {
+    const openBtn = e.target.closest("[data-open-info]");
+    if (!openBtn) return;
+
     const key = openBtn.getAttribute("data-open-info");
     const data = INFO[key];
+    if (!data) return;
 
-    modalTitle.textContent = data?.title || "Info";
-    modalDesc.textContent = data?.desc || "";
     modalBody.innerHTML = "";
-    modalBody.appendChild(buildAccordion(data?.items || []));
+    modalBody.appendChild(buildAccordion(data.items));
 
-    openModal();
-    return;
-  }
-
-  // Cerrar modal
-  if (e.target.matches("[data-close]")) {
-    closeModal();
-    return;
-  }
+    openModal({ title: data.title, desc: data.desc, bodyHTML: modalBody.innerHTML });
+    modalBody.innerHTML = "";
+    modalBody.appendChild(buildAccordion(data.items));
+  });
 
   // Copiar
-  const copyBtn = e.target.closest("[data-copy]");
-  if (copyBtn) {
-    const sel = copyBtn.getAttribute("data-copy");
-    const el = document.querySelector(sel);
-    const text = el ? el.textContent : "";
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-copy]");
+    if (!btn) return;
+
+    const sel = btn.getAttribute("data-copy");
+    const el = sel ? $(sel) : null;
+    const text = el ? el.textContent.trim() : "";
+    if (!text) return;
+
     try {
-      await navigator.clipboard.writeText(text.trim());
-      const old = copyBtn.textContent;
-      copyBtn.textContent = "Copiado ✅";
-      setTimeout(() => (copyBtn.textContent = old), 900);
+      await navigator.clipboard.writeText(text);
+      const old = btn.textContent;
+      btn.textContent = "Copiado ✅";
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = old;
+        btn.disabled = false;
+      }, 900);
     } catch {
-      alert("No se pudo copiar. Copiá manualmente.");
+      alert("No se pudo copiar. Probá manualmente.");
     }
-  }
-});
+  });
 
-// Cerrar con ESC
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") closeModal();
-});
+  // =========================================================
+  // QUIZ (5 pantallas) con tu lógica
+  // =========================================================
+  const stepLabel = $("#stepLabel");
+  const progressBar = $("#progressBar");
+  const step1 = $("#step1");
+  const step2 = $("#step2");
+  const step3 = $("#step3");
 
-// ===============================
-// QUIZ (3 pasos) + RESULTADO EN MODAL
-// Reutilizamos el mismo modal para mostrar resultado.
-// ===============================
-const stepLabel = document.getElementById("stepLabel");
-const progressBar = document.getElementById("progressBar");
-const step1 = document.getElementById("step1");
-const step2 = document.getElementById("step2");
-const step3 = document.getElementById("step3");
-const err1 = document.getElementById("err1");
-const err2 = document.getElementById("err2");
+  if (!step1 || !step2 || !step3 || !stepLabel || !progressBar) return;
 
-const next1 = document.getElementById("next1");
-const next2 = document.getElementById("next2");
-const back2 = document.getElementById("back2");
-const back3 = document.getElementById("back3");
-const finish = document.getElementById("finish");
+  // Mensual
+  const PLAN_MENSUAL = {
+    plata: 990,
+    plata_promo_j: 890,
+    oro: 1190
+  };
+  const EXTRA_DECO = 280;
+  const FUTBOL_MENSUAL = 300;
 
-const PRICES = {
-  p1: { conexion: 1000, base: 1200, label: "P1" },
-  p2: { conexion: 800, base: 1350, label: "P2" },
-  p3: { conexion: 1200, base: 1600, label: "P3" },
-  tarjeta: { conexion: 900, base: 1450, label: "Tarjeta" },
-  decoExtraMensual: 200,
-  goBox: 300,
-  futbol: 450
-};
-
-let quiz = { tipo: null, decos: null, goBox: false, futbol: false };
-
-function showQuizStep(n) {
-  step1.hidden = n !== 1;
-  step2.hidden = n !== 2;
-  step3.hidden = n !== 3;
-
-  stepLabel.textContent = `Paso ${n}`;
-  progressBar.style.width = `${n * 33.333}%`;
-
-  err1.hidden = true;
-  err2.hidden = true;
-}
-
-function getTipo() {
-  return document.querySelector('input[name="tipoCliente"]:checked')?.value || null;
-}
-function getDecos() {
-  const v = document.querySelector('input[name="decos"]:checked')?.value || null;
-  return v ? parseInt(v, 10) : null;
-}
-
-function resetQuiz() {
-  document.querySelectorAll('input[name="tipoCliente"]').forEach(i => i.checked = false);
-  document.querySelectorAll('input[name="decos"]').forEach(i => i.checked = false);
-  document.getElementById("gobox").checked = false;
-  document.getElementById("futbol").checked = false;
-  quiz = { tipo: null, decos: null, goBox: false, futbol: false };
-  showQuizStep(1);
-}
-
-next1.addEventListener("click", () => {
-  const tipo = getTipo();
-  if (!tipo || !PRICES[tipo]) {
-    err1.hidden = false;
-    return;
-  }
-  quiz.tipo = tipo;
-  showQuizStep(2);
-});
-
-back2.addEventListener("click", () => showQuizStep(1));
-
-next2.addEventListener("click", () => {
-  const decos = getDecos();
-  if (!decos || decos < 1) {
-    err2.hidden = false;
-    return;
-  }
-  quiz.decos = decos;
-  showQuizStep(3);
-});
-
-back3.addEventListener("click", () => showQuizStep(2));
-
-finish.addEventListener("click", () => {
-  // Validación final (por si el usuario llega raro)
-  quiz.tipo = quiz.tipo || getTipo();
-  quiz.decos = quiz.decos || getDecos();
-
-  if (!quiz.tipo || !PRICES[quiz.tipo]) {
-    showQuizStep(1);
-    err1.hidden = false;
-    return;
-  }
-  if (!quiz.decos || quiz.decos < 1) {
-    showQuizStep(2);
-    err2.hidden = false;
-    return;
+  // Conexión por tipo y decos
+  function conexionBase(tipo, decos) {
+    // tipo: "p12" o "p3tc"
+    if (decos === 1 || decos === 2) return (tipo === "p12") ? 690 : 0;
+    if (decos === 3) return (tipo === "p12") ? 1789 : 1099;
+    if (decos === 4) return (tipo === "p12") ? 2888 : 2198;
+    return 0;
   }
 
-  quiz.goBox = document.getElementById("gobox").checked;
-  quiz.futbol = document.getElementById("futbol").checked;
+  function conexionGoBoxExtra(tipo) {
+    return (tipo === "p12") ? 1000 : 500;
+  }
 
-  const plan = PRICES[quiz.tipo];
-  const conexion = plan.conexion;
+  let quiz = { tipo: null, gobox: null, futbol: null, plan: null, decos: null };
 
-  const decosExtra = Math.max(0, quiz.decos - 1);
-  const costoDecos = decosExtra * PRICES.decoExtraMensual;
-  const costoGoBox = quiz.goBox ? PRICES.goBox : 0;
-  const costoFutbol = quiz.futbol ? PRICES.futbol : 0;
+  const screens = [
+    {
+      key: "tipo",
+      title: "Pregunta 1 · ¿Tipo de cliente?",
+      html: `
+        <label class="option"><input type="radio" name="q_tipo" value="p12"><span><b>P1 o P2</b></span></label>
+        <label class="option"><input type="radio" name="q_tipo" value="p3tc"><span><b>P3 o TC</b></span></label>
+        <div class="err" id="q_err" hidden>Elegí una opción para continuar.</div>
+        <div class="actions"><button class="btn primary" data-next>Siguiente</button></div>
+      `,
+      read: () => document.querySelector('input[name="q_tipo"]:checked')?.value || null,
+      write: (v) => { $$('input[name="q_tipo"]').forEach(i => i.checked = (i.value === v)); }
+    },
+    {
+      key: "gobox",
+      title: "Pregunta 2 · ¿Quiere GO Box?",
+      html: `
+        <label class="option"><input type="radio" name="q_gobox" value="si"><span>Sí</span></label>
+        <label class="option"><input type="radio" name="q_gobox" value="no"><span>No</span></label>
+        <div class="err" id="q_err" hidden>Elegí una opción para continuar.</div>
+        <div class="actions">
+          <button class="btn" data-back>Atrás</button>
+          <button class="btn primary" data-next>Siguiente</button>
+        </div>
+      `,
+      read: () => {
+        const v = document.querySelector('input[name="q_gobox"]:checked')?.value || null;
+        return v === "si" ? true : (v === "no" ? false : null);
+      },
+      write: (v) => { $$('input[name="q_gobox"]').forEach(i => i.checked = ((i.value === "si") === v)); }
+    },
+    {
+      key: "futbol",
+      title: "Pregunta 3 · ¿Quiere Fútbol Uruguayo?",
+      html: `
+        <label class="option"><input type="radio" name="q_futbol" value="si"><span>Sí</span></label>
+        <label class="option"><input type="radio" name="q_futbol" value="no"><span>No</span></label>
+        <div class="err" id="q_err" hidden>Elegí una opción para continuar.</div>
+        <div class="actions">
+          <button class="btn" data-back>Atrás</button>
+          <button class="btn primary" data-next>Siguiente</button>
+        </div>
+      `,
+      read: () => {
+        const v = document.querySelector('input[name="q_futbol"]:checked')?.value || null;
+        return v === "si" ? true : (v === "no" ? false : null);
+      },
+      write: (v) => { $$('input[name="q_futbol"]').forEach(i => i.checked = ((i.value === "si") === v)); }
+    },
+    {
+      key: "plan",
+      title: "Pregunta 4 · ¿Qué plan desea?",
+      html: `
+        <label class="option"><input type="radio" name="q_plan" value="plata"><span><b>Plata HD</b> — $990 (1 deco)</span></label>
+        <label class="option"><input type="radio" name="q_plan" value="plata_promo_j"><span><b>Plata HD Promo J</b> — $890 (1 deco)</span></label>
+        <label class="option"><input type="radio" name="q_plan" value="oro"><span><b>Oro HD</b> — $1190 (1 deco)</span></label>
+        <div class="err" id="q_err" hidden>Elegí una opción para continuar.</div>
+        <div class="actions">
+          <button class="btn" data-back>Atrás</button>
+          <button class="btn primary" data-next>Siguiente</button>
+        </div>
+      `,
+      read: () => document.querySelector('input[name="q_plan"]:checked')?.value || null,
+      write: (v) => { $$('input[name="q_plan"]').forEach(i => i.checked = (i.value === v)); }
+    },
+    {
+      key: "decos",
+      title: "Pregunta 5 · ¿Cuántos decodificadores quiere?",
+      html: `
+        <div class="row">
+          <label class="chip"><input type="radio" name="q_decos" value="1"><span>1</span></label>
+          <label class="chip"><input type="radio" name="q_decos" value="2"><span>2</span></label>
+          <label class="chip"><input type="radio" name="q_decos" value="3"><span>3</span></label>
+          <label class="chip"><input type="radio" name="q_decos" value="4"><span>4</span></label>
+        </div>
+        <div class="err" id="q_err" hidden>Elegí una opción para continuar.</div>
+        <div class="actions">
+          <button class="btn" data-back>Atrás</button>
+          <button class="btn success" data-finish>Ver resultado</button>
+        </div>
+        <p class="hint">Extras: +$${EXTRA_DECO}/mes desde el 2º deco · Fútbol +$${FUTBOL_MENSUAL}/mes.</p>
+      `,
+      read: () => {
+        const v = document.querySelector('input[name="q_decos"]:checked')?.value || null;
+        return v ? parseInt(v, 10) : null;
+      },
+      write: (v) => { $$('input[name="q_decos"]').forEach(i => i.checked = (parseInt(i.value, 10) === v)); }
+    }
+  ];
 
-  const mensual = plan.base + costoDecos + costoGoBox + costoFutbol;
+  let screenIndex = 0;
 
-  // Mostrar en el mismo modal (simple y corto)
-  modalTitle.textContent = "Resultado de costos";
-  modalDesc.textContent = "Conexión + cuota mensual total (ejemplo)";
-  modalBody.innerHTML = `
-    <div class="panel" style="margin-top:0;">
-      <div><b>Precio conexión:</b> $${conexion}</div>
-      <div style="margin-top:6px;"><b>Cuota mensual:</b> $${mensual}</div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
-      <div class="small-muted" style="margin-bottom:6px;">Detalle</div>
-      <div class="codebox">
-Tipo: ${plan.label} (base $${plan.base})
-Decodificadores: ${quiz.decos} (extras ${decosExtra} → $${costoDecos})
-GO Box: ${quiz.goBox ? "Sí" : "No"} (${costoGoBox})
-Fútbol uruguayo: ${quiz.futbol ? "Sí" : "No"} (${costoFutbol})
-      </div>
-      <div class="copyline">
-        <button class="btn primary" id="btnResetQuiz">Reiniciar quiz</button>
-        <button class="btn" data-close>Cerrar</button>
-      </div>
-    </div>
-  `;
+  function updateProgress() {
+    const stepNum = screenIndex + 1;
+    stepLabel.textContent = `Paso ${stepNum}`;
+    progressBar.style.width = `${(stepNum / screens.length) * 100}%`;
+  }
 
-  openModal();
+  function renderScreen() {
+    step2.hidden = true;
+    step3.hidden = true;
+    step1.hidden = false;
 
-  // Reset desde el modal
-  setTimeout(() => {
-    const b = document.getElementById("btnResetQuiz");
-    if (b) b.addEventListener("click", () => {
-      closeModal();
-      resetQuiz();
+    const s = screens[screenIndex];
+    step1.innerHTML = `<h3>${s.title}</h3>${s.html}`;
+
+    const val = quiz[s.key];
+    if (val !== null && val !== undefined) {
+      setTimeout(() => s.write(val), 0);
+    }
+    updateProgress();
+  }
+
+  function showError(msg) {
+    const err = $("#q_err", step1);
+    if (!err) return;
+    err.textContent = msg;
+    err.hidden = false;
+  }
+  function clearError() {
+    const err = $("#q_err", step1);
+    if (err) err.hidden = true;
+  }
+
+  function computeResult() {
+    const tipo = quiz.tipo;
+    const decos = quiz.decos;
+
+    let conexion = conexionBase(tipo, decos);
+    if (quiz.gobox === true) conexion += conexionGoBoxExtra(tipo);
+
+    const baseMensual = PLAN_MENSUAL[quiz.plan] ?? 0;
+    const extras = Math.max(0, decos - 1) * EXTRA_DECO;
+    let mensual = baseMensual + extras;
+    if (quiz.futbol === true) mensual += FUTBOL_MENSUAL;
+
+    return { conexion, mensual, baseMensual, extras };
+  }
+
+  function openResultPopup() {
+    const { conexion, mensual, baseMensual, extras } = computeResult();
+
+    const tipoLabel = quiz.tipo === "p12" ? "P1 o P2" : "P3 o TC";
+    const planLabel =
+      quiz.plan === "plata" ? "Plata HD" :
+      quiz.plan === "plata_promo_j" ? "Plata HD Promo J" :
+      "Oro HD";
+
+    const goConn = quiz.gobox ? conexionGoBoxExtra(quiz.tipo) : 0;
+    const connBase = conexionBase(quiz.tipo, quiz.decos);
+
+    openModal({
+      title: "Resultado de costos",
+      desc: "Costo de conexión y costo mensual calculados",
+      bodyHTML: `
+        <div class="panel" style="margin-top:0;">
+          <div><b>Costo de conexión:</b> $${conexion}</div>
+          <div style="margin-top:8px;"><b>Costo mensual:</b> $${mensual}</div>
+
+          <div style="height:12px"></div>
+          <div class="small-muted">Detalle</div>
+          <div class="codebox" style="margin-top:8px;">
+Tipo de cliente: ${tipoLabel}
+Plan: ${planLabel} (base $${baseMensual})
+Decodificadores: ${quiz.decos} (extras mensual $${extras})
+GO Box: ${quiz.gobox ? "Sí" : "No"} (extra conexión $${goConn})
+Fútbol uruguayo: ${quiz.futbol ? "Sí" : "No"} (extra mensual $${quiz.futbol ? FUTBOL_MENSUAL : 0})
+Conexión base: $${connBase}
+          </div>
+
+          <div class="copyline">
+            <button class="btn primary" id="resetQuizBtn">Reiniciar quiz</button>
+            <button class="btn" data-close>Cerrar</button>
+          </div>
+        </div>
+      `
     });
-  }, 0);
-});
 
-// Start
-showQuizStep(1);
+    setTimeout(() => {
+      const b = $("#resetQuizBtn");
+      if (b) b.addEventListener("click", () => {
+        closeModal();
+        resetQuiz();
+      });
+    }, 0);
+  }
+
+  function resetQuiz() {
+    quiz = { tipo: null, gobox: null, futbol: null, plan: null, decos: null };
+    screenIndex = 0;
+    renderScreen();
+  }
+
+  // Navegación del quiz (delegada)
+  step1.addEventListener("click", (e) => {
+    const next = e.target.closest("[data-next]");
+    const back = e.target.closest("[data-back]");
+    const fin = e.target.closest("[data-finish]");
+
+    if (next) {
+      clearError();
+      const s = screens[screenIndex];
+      const val = s.read();
+      if (val === null || val === undefined || val === "") {
+        showError("Elegí una opción para continuar.");
+        return;
+      }
+      quiz[s.key] = val;
+
+      if (screenIndex < screens.length - 1) {
+        screenIndex++;
+        renderScreen();
+      }
+      return;
+    }
+
+    if (back) {
+      clearError();
+      const s = screens[screenIndex];
+      const val = s.read();
+      if (val !== null && val !== undefined && val !== "") quiz[s.key] = val;
+
+      if (screenIndex > 0) {
+        screenIndex--;
+        renderScreen();
+      }
+      return;
+    }
+
+    if (fin) {
+      clearError();
+      const s = screens[screenIndex];
+      const val = s.read();
+      if (!val || val < 1) {
+        showError("Elegí una opción para continuar.");
+        return;
+      }
+      quiz[s.key] = val;
+
+      if (!quiz.tipo || quiz.gobox === null || quiz.futbol === null || !quiz.plan || !quiz.decos) {
+        showError("Faltan respuestas. Volvé y completá todo.");
+        return;
+      }
+
+      openResultPopup();
+    }
+  });
+
+  // Init
+  resetQuiz();
+})();
