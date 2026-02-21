@@ -101,8 +101,9 @@ En Montevideo incluyen un mes de HBO MAX gratis y en el interior de Universal+, 
       title: "Productos adicionales",
       desc: "Ejemplo de contenido",
       items: [
-        { h: "GO Box", html: `<p class="small-muted">Suma costo de conexión según tipo de cliente.</p>` },
-        { h: "Fútbol uruguayo", html: `<p class="small-muted">Suma $300 a la cuota mensual.</p>` }
+        { h: "GO Box", html: `<p class="small-muted"> Convierte una televisión común en inteligente. Es estilo Chromecast. Se lo damos como alternativa a sumar un decodificador más para no sumar a la cuota mensual. El precio es $500 para P3 y TC y $1000 para P1 y P2. Se paga junto a la tasa de conexión.</p>` },
+        { h: "Fútbol uruguayo", html: `<p class="small-muted">Suma $300 a la cuota mensual. Sirve para todas las televisiones que tenga contratadas. No sé puede ver en streaming en DirecTV Go. Tenemos los derechos del fútbol uruguayo en exclusiva. Solo corresponde a campeonato uruguayo. Copas internacionales, Uruguay, copas de otros países se ven sin pagar adicional</p>` }
+ { h: "Otros", html: `<p class="small-muted"> Se pueden sumar otros adicionales como globo y otros packs que figuran en DirecTVla.com.uy </p>` },
       ]
     },
     proceso: {
