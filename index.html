@@ -1,10 +1,3 @@
-<!-- index.html (actualizado y mejorado)
-     - Estructura más limpia y moderna
-     - Quiz con contenedor dedicado (#quizRoot) para 5 pasos
-     - Cards + “Ver más” abre modal con acordeón
-     - 100% responsive
-     - Mantiene: styles.css y app.js (el último que te pasé)
--->
 <!doctype html>
 <html lang="es">
 <head>
@@ -41,7 +34,7 @@
     <section id="cards" class="section">
       <div class="section-head">
         <h2>Accesos</h2>
-        <p>Entrá a cada tema y abrí la info en popup (acordeón).</p>
+        <p>Tocá “Ver más” para abrir la información en popup (acordeón).</p>
       </div>
 
       <div class="grid">
@@ -105,7 +98,7 @@
     <section id="calc" class="section">
       <div class="section-head">
         <h2>Calculadora de costos</h2>
-        <p>Responde 5 preguntas. Resultado: costo de conexión + costo mensual.</p>
+        <p>Respondé 5 preguntas. Resultado: costo de conexión + costo mensual.</p>
       </div>
 
       <div class="panel">
@@ -123,10 +116,8 @@
           <div class="progress-bar" id="progressBar" style="width:20%"></div>
         </div>
 
-        <!-- Contenedor dedicado para el quiz (el JS lo llena) -->
-        <div id="quizRoot" class="quiz-root" aria-live="polite">
-          <!-- El app.js renderiza las pantallas acá -->
-        </div>
+        <!-- El JS renderiza cada pantalla del quiz acá -->
+        <div id="quizRoot" class="quiz-root" aria-live="polite"></div>
 
         <div class="quiz-note">
           <div class="note">
@@ -210,4 +201,4 @@
 
   <script src="app.js"></script>
 </body>
-                </html>
+</html>
